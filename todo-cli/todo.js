@@ -1,50 +1,43 @@
 const todoList = () => {
-  all = []
+    const all = []; // Declare 'all' as a local variable within the function.
+  
     const add = (todoItem) => {
-      all.push(todoItem)
-    }
+      all.push(todoItem);
+    };
+  
     const markAsComplete = (index) => {
-      all[index].completed = true
-    }
+      all[index].completed = true;
+    };
   
     const overdue = () => {
-        const today = new Data().toISOString().split('T')[0];
-        return all.filter((item) => !item.completed && item.dueData < today)
-      // Write the date check condition here and return the array
-      // of overdue items accordingly.
-    }
+      const today = new Date().toISOString().split("T")[0];
+      return all.filter((item) => !item.completed && item.dueDate < today);
+    };
   
     const dueToday = () => {
-        
-        const today = new Date().toISOString().split("T")[0];
-        return all.filter((item) => !item.completed && item.dueDate === today);
-      // Write the date check condition here and return the array
-      // of todo items that are due today accordingly.
-    }
+      const today = new Date().toISOString().split("T")[0];
+      return all.filter((item) => !item.completed && item.dueDate === today);
+    };
   
     const dueLater = () => {
-        const today = new Date().toISOString().split("T")[0];
-        return all.filter((item) => !item.completed && item.dueDate > today);
-      // Write the date check condition here and return the array
-      // of todo items that are due later accordingly.
-    }
+      const today = new Date().toISOString().split("T")[0];
+      return all.filter((item) => !item.completed && item.dueDate > today);
+    };
   
     const toDisplayableList = (list) => {
-        return list
-        .map((item,index) => `[${index + 1}] ${item.title}` )
+      return list
+        .map((item, index) => `[${index + 1}] ${item.title}`)
         .join("\n");
-      // Format the To-Do list here, and return the output string
-      // as per the format given above.
-    }
+    };
   
     return {
-    all,
+      all,
       add,
       markAsComplete,
       overdue,
       dueToday,
       dueLater,
-      toDisplayableList
+      toDisplayableList,
     };
   };
   
