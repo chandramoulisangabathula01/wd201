@@ -58,8 +58,6 @@
 //   }
 // })
 
-const http = require('http')
-const fs = require('fs')
 // const { listenerCount } = require('process')
 
 // fs.readFile('home.html', (err, home) => {
@@ -75,10 +73,18 @@ const fs = require('fs')
 //     })
 //     .listen(3000)
 // })
+
+//
+
+const http = require('http')
+const fs = require('fs')
+const minimist = require('minimist')
+
 let homeContent = ''
 let projectContent = ''
-// let registrationcontent = ''
+let registrationContent = ''
 
+// Read home.html content
 fs.readFile('home.html', (err, home) => {
   if (err) {
     throw err
@@ -86,36 +92,44 @@ fs.readFile('home.html', (err, home) => {
   homeContent = home
 })
 
+// Read project.html content
 fs.readFile('project.html', (err, project) => {
   if (err) {
     throw err
   }
   projectContent = project
 })
-// fs.readFile('registration.html', (err, registration) => {
-//   if (err) {
-//     throw err
-//   }
-//   registrationcontent = registration
-// })
 
-http
-  .createServer((request, response) => {
-    const url = request.url
-    response.writeHeader(200, { 'Content-Type': 'text/html' })
-    switch (url) {
-      case '/registration':
-        // response.write(projectContent)
-        response.end()
-        break
-      case '/project':
-        response.write(projectContent)
-        response.end()
-        break
-      default:
-        response.write(homeContent)
-        response.end()
-        break
-    }
-  })
-  .listen(5000)
+// Read registration.html content
+fs.readFile('registration.html', (err, registration) => {
+  if (err) {
+    throw err
+  }
+  registrationContent = registration
+})
+
+const argv = minimist(process.argv.slice(2))
+const port = argv.port || 5000 // Default to port 5000 if not specified
+
+const server = http.createServer((request, response) => {
+  const url = request.url
+  response.writeHead(200, { 'Content-Type': 'text/html' })
+
+  switch (url) {
+    case '/registration':
+      response.write(registrationContent)
+      break
+    case '/project':
+      response.write(projectContent)
+      break
+    default:
+      response.write(homeContent)
+      break
+  }
+
+  response.end()
+})
+
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`)
+})
