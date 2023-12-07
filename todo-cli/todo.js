@@ -25,10 +25,11 @@ const todoList = () => {
     };
   
     const toDisplayableList = (list) => {
-      return list
-        .map((item, index) => `[${index + 1}] ${item.title}`)
-        .join("\n");
-    };
+        return list
+          .map((item, index) => `[${item.completed ? 'x' : ' '}] ${item.title} ${item.dueDate}`)
+          .join('\n');
+      };
+      
   
     return {
       all,
@@ -40,6 +41,9 @@ const todoList = () => {
       toDisplayableList,
     };
   };
+  
+  // ... (rest of the code remains unchanged)
+  
   
   // ####################################### #
   // DO NOT CHANGE ANYTHING BELOW THIS LINE. #
