@@ -1,15 +1,30 @@
+// {
+//     "env": {
+//         "browser": true,
+//         "commonjs": true,
+//         "es2021": true
+//     },
+//     "plugins": ["standard"],
+//     "extends":"standard",
+//     "parserOptions": {
+//         "ecmaVersion": "latest"
+//     },
+//     "rules": {
+//     }
+// }
+// "eslint:recommended"
+
+
 {
     "env": {
         "browser": true,
         "commonjs": true,
         "es2021": true
     },
-    "plugins": ["standard"],
-    "extends":"standard",
+    "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaVersion": "latest"
     },
     "rules": {
     }
 }
-// "eslint:recommended"
