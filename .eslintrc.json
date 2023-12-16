@@ -9,5 +9,10 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "semi": ["error", "always"], // Enforce semicolons at the end of statements
+        "indent": ["error", 2], // Use 2 spaces for indentation
+        "quotes": ["error", "single"], // Prefer single quotes
+        "no-console": "off"// Allowing console.log for debugging (consider removing in production)
+        // Add more rules as needed
     }
 }
