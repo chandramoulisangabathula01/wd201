@@ -97,20 +97,42 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
   }
 });
 
+// app.delete("/todos/:id", async function (request, response) {
+//     try {
+//       const todoId = request.params.id;
+//       const deletedTodoCount = await Todo.destroy({
+//         where: { id: todoId },
+//       });
+  
+//       if (deletedTodoCount > 0) {
+//         return response.json({ success: true });
+//       } else {
+//         return response.status(404).json({ error: "Todo not found" });
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return response.status(500).json({ error: "Internal Server Error" });
+//     }
+//   });
+
 app.delete("/todos/:id", async function (request, response) {
     try {
       const todoId = request.params.id;
+  
+      // Using `destroy` method to delete the todo by ID
       const deletedTodoCount = await Todo.destroy({
         where: { id: todoId },
       });
   
+      // Check if a todo was deleted and send a boolean response
       if (deletedTodoCount > 0) {
         return response.json({ success: true });
       } else {
-        return response.status(404).json({ error: "Todo not found" });
+        // If no todo was found with the given ID, respond accordingly
+        return response.json({ success: false });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return response.status(500).json({ error: "Internal Server Error" });
     }
   });
