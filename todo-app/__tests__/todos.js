@@ -2,6 +2,7 @@ const request = require("supertest");
 
 const db = require("../models/index");
 const app = require("../app");
+const { boolean } = require("yargs");
 
 let server, agent;
 
@@ -12,9 +13,14 @@ describe("Todo test suite", () => {
         agent = request.agent(server);
     });
     afterAll(async () => {
-        await db.sequelize.close();
-        server.close();
-    })
+        try {
+          await db.sequelize.close();
+          await server.close();
+        } catch (error) {
+          console.log(error);
+        }
+    });
+
     test("responds with json at /todos", async () => {
         const response = await agent.post('/todos').send({
             'title': 'Buy milk',
@@ -45,5 +51,38 @@ describe("Todo test suite", () => {
             .send();
         const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
         expect(parsedUpdateResponse.completed).toBe(true);
+    });
+    
+    test("Fetches all todos in the database using /todos endpoint", async () => {
+        await agent.post("/todos").send({
+          title: "Buy xbox",
+          dueDate: new Date().toISOString(),
+          completed: false,
+        });
+        await agent.post("/todos").send({
+          title: "Buy ps3",
+          dueDate: new Date().toISOString(),
+          completed: false,
+        });
+        const response = await agent.get("/todos");
+        const parsedResponse = JSON.parse(response.text);
+    
+        expect(parsedResponse.length).toBe(4);
+        expect(parsedResponse[3]["title"]).toBe("Buy ps3");
+      });
+    
+      test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+        // FILL IN YOUR CODE HERE
+        const response = await agent.post("/todos").send({
+          title:"Temporary Item",
+          dueDate: new Date().toISOString(),
+          completed:false
+      });
+      const parsedResponse = JSON.parse(response.text)
+      const InsertID = parsedResponse.id
+    
+      const deleteResponse  = await agent.delete("/todos/${ InsertID}").sned();
+      const flag = boolean(deleteResponse.text);
+      expect(flag).toBe(true);
     });
 })
