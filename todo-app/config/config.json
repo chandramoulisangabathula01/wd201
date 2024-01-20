@@ -12,10 +12,8 @@
     "database": "wd-todo-test",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "url": "postgres://postgres:123456@127.0.0.1:5432/wd-todo-test",
+    "logging": false
   
-    "logging": false,
-    "recreateTestDB": true
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
