@@ -1,14 +1,14 @@
-// const app = require('./app');
+const app = require('./app');
 
-// app.listen(5000, () => {
-//     console.log("started express server at port 5000")
-// })
+app.listen(5000, () => {
+    console.log("started express server at port 5000")
+})
 
 
 // new
 
-const app = require("./app");
-const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-    console.log('started express server');
-});
+// const app = require("./app");
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT,()=>{
+//     console.log('started express server');
+// });
