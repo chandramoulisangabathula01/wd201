@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon -e js,ejs",
     "start:prod": "node index.js",
+    "build": "npm install && NODE_ENV=production npx sequelize-cli db:migrate",
     "pretest": "NODE_ENV=test npm run recreate-test-db",
     "recreate-test-db": "npx sequelize-cli db:migrate --url $DATABASE_URL && npx sequelize-cli db:seed:all --url $DATABASE_URL",
     "test": "NODE_ENV=test jest",
