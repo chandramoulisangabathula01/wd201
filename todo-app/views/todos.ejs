@@ -25,10 +25,10 @@
     %>
   
     <!-- Overdue Section -->
-    <div>
+    
       <h5 style="display: inline-block; margin-right: 1rem">Overdue</h5>
       <span id="count-overdue" class="bg-gray-200 text-black px-3 py-1 rounded font-medium mr-2 mb-2" style="display: inline-block"><%= countOverdue %></span>
-    </div>
+    
   
     <ul class="list-none">
       <% for(var i=0; i < allTodos.length; i++ ){
@@ -65,10 +65,10 @@
     </ul>
   
     <!-- Due Today Section -->
-    <div>
+    
       <h5 style="display: inline-block; margin-right: 1rem">Due Today</h5>
       <span id="count-due-today" class="bg-gray-200 text-black px-3 py-1 rounded font-medium mr-2 mb-2" style="display: inline-block"><%= countDueToday %></span>
-    </div>
+   
   
     <ul class="list-none">
       <% for(var i=0; i < allTodos.length; i++ ){
@@ -93,10 +93,10 @@
     </ul>
   
     <!-- Due Later Section -->
-    <div>
+    
       <h5 style="display: inline-block; margin-right: 1rem">Due Later</h5>
       <span id="count-due-later" class="bg-gray-200 text-black px-3 py-1 rounded font-medium mr-2 mb-2" style="display: inline-block"><%= countDueLater %></span>
-    </div>
+   
   
     <ul class="list-none">
       <% for(var i=0; i < allTodos.length; i++ ){
@@ -121,10 +121,10 @@
     </ul>
   
     <!-- Completed Items Section -->
-    <div>
+    
       <h5 style="display: inline-block; margin-right: 1rem">Completed Items</h5>
       <span id="count-completed" class="bg-gray-200 text-black px-3 py-1 rounded font-medium mr-2 mb-2" style="display: inline-block"><%= countCompleted %></span>
-    </div>
+    
   
     <ul class="list-none">
       <% for(var i=0; i < allTodos.length && allTodos[i].completed; i++ ){ %>
@@ -141,4 +141,8 @@
         </li>
       <% } %>
     </ul>
+
+
+    
+
   </div>
