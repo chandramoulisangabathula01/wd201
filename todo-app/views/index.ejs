@@ -4,23 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/styles.css">
-    <title>Document</title>
+    <title>Todo Application</title>
 </head>
 <body>
     
     <%- include('header.ejs') %>
 
     <table>
-        <%  for (var i=0; i < allTodos.length; i++ ) { %>
+        <% for (var i = 0; i < allTodos.length; i++) { %>
             <tr>
                 <td>
                     <%= allTodos[i].title %>
+                </td>
+                <td>
                     <%= allTodos[i].dueDate %>
+                </td>
+                <td>
                     <%= allTodos[i].completed %>
                 </td>
             </tr>
         <% } %>
     </table>
+
     <%- include("footer.ejs") %> 
 </body>
 </html>
