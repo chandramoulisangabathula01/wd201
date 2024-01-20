@@ -1,87 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <h1>Due-Today</h1>
-    <table style="border-color: #8e82fb; border: 1px solid; width: 50;">
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Due Date</th>
-            <th>Status</th>
-        </tr>
-        <% for (var i=0; i < todos.length; i++) { %>
-            <tr>
-                <td>
-                    <%= todos[i].id %>
-                </td>
-                <td>
-                    <%= todos[i].title %>
-                </td>
-                <td>
-                    <%= todos[i].dueDate %>
-                </td>
-                <td>
-                    <%= todos[i].completed ? true : false %>
-                </td>
-            </tr>
-            <% } %>
-    </table>
-    <h1>Overdue</h1>
-    <table style="border-color: #8c8a9e; border: 1px solid; width: 50;">
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Due Date</th>
-            <th>Status</th>
-        </tr>
-        <% for (var i=0; i < todos.length; i++) { %>
-            <tr>
-                <td>
-                    <%= todos[i].id %>
-                </td>
-                <td>
-                    <%=  todos[i].title %>
-                </td>
-                <td>
-                    <%= todos[i].dueDate %>
-                </td>
-                <td>
-                    <%= todos[i].completed ? true : false %>
-                </td>
-            </tr>
-            <% } %>
-    </table>
-    <h1>Due-Later</h1>
-    <table style="border-color: #8c8a9e; border: 1px solid; width: 50;">
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Due Date</th>
-            <th>Status</th>
-        </tr>
-        <% for (var i=0; i < todos.length; i++) { %>
-            <tr>
-                <td>
-                    <%= todos[i].id %>
-                </td>
-                <td>
-                    <%= todos[i].title %>
-                </td>
-                <td>
-                    <%= todos[i].dueDate %>
-                </td>
-                <td>
-                    <%= todos[i].completed ? true : false %>
-                </td>
-            </tr>
-            <% } %>
-    </table>
-</body>
-</html>
+<!-- Section for Overdue Todos -->
+<section>
+    <h5>Overdue (<span id="count-overdue"><%= overdue.length %></span>)</h5>
+    <ul>
+      <% overdue.forEach(todo => { %>
+        <li><%= todo.title %></li>
+      <% }); %>
+    </ul>
+  </section>
+  
+  <!-- Section for Todos Due Today -->
+  <section>
+    <h5>Due Today (<span id="count-duetoday"><%= duetoday.length %></span>)</h5>
+    <ul>
+      <% duetoday.forEach(todo => { %>
+        <li><%= todo.title %></li>
+      <% }); %>
+    </ul>
+  </section>
+  
+  <!-- Section for Todos Due Later -->
+  <section>
+    <h5>Due Later (<span id="count-duelater"><%= duelater.length %></span>)</h5>
+    <ul>
+      <% duelater.forEach(todo => { %>
+        <li><%= todo.title %></li>
+      <% }); %>
+    </ul>
+  </section>
+  
