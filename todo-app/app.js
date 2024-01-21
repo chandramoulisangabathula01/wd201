@@ -64,19 +64,31 @@ app.post("/todos", async function (request, response) {
 });
 
 app.put("/todos/:id", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
   try {
+    const todo = await Todo.findByPk(request.params.id);
+
+    if (!todo) {
+      return response.status(404).json({ error: "Todo not found" });
+    }
+
     const newCompletionStatus = !todo.completed;
-    if (newCompletionStatus && new Date(todo.dueDate) < new Date()) {
+
+    // Check if the todo is overdue
+    const dueDate = new Date(todo.dueDate);
+    const currentDate = new Date();
+
+    if (newCompletionStatus && dueDate < currentDate) {
+      await todo.update({ completed: true });
+    } else {
       await todo.update({ completed: newCompletionStatus });
     }
+
     return response.json(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
-
 
 
 app.delete("/todos/:id", async function (request, response) {
