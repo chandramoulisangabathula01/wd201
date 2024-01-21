@@ -78,10 +78,10 @@ app.put("/todos/:id", async function (request, response) {
     const currentDate = new Date();
 
     if (newCompletionStatus && dueDate < currentDate) {
-      await todo.update({ completed: true });
-    } else {
-      await todo.update({ completed: newCompletionStatus });
+      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
     }
+
+    await todo.update({ completed: newCompletionStatus });
 
     return response.json(todo);
   } catch (error) {
@@ -89,6 +89,7 @@ app.put("/todos/:id", async function (request, response) {
     return response.status(422).json(error);
   }
 });
+
 
 
 app.delete("/todos/:id", async function (request, response) {

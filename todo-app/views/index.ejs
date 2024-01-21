@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,7 +29,8 @@
         .getAttribute("content");
 
       function updateTodo(id) {
-        const bool = document.querySelector(`#todo-checkbox-${id}`).checked;
+        console.log('Updating todo with ID:', id);
+        const bool = document.querySelector(`#todo-${id}`).checked;
         var token = document
           .querySelector('meta[name="csrf-token"]')
           .getAttribute("content");
@@ -47,7 +52,7 @@
       }
 
       function deleteTodo(id) {
-        console.log(id);
+        console.log('Deleting todo with ID:', id);
         fetch(`/todos/${id}`, {
           method: "delete",
           headers: { "Content-Type": "application/json" },
@@ -62,7 +67,6 @@
           })
           .catch((err) => console.error(err));
       }
-      
     </script>
   </head>
 
@@ -70,40 +74,26 @@
     <div class="grid pt-28 grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include("header.ejs") %>
-        <form action="/todos" method="post" onsubmit="return validateTodoForm()">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <div class="flex gap-2 mt-5">
-            <div class="flex-auto">
-              <input
-                type="text"
-                name="title"
-                placeholder="Task Title"
-                class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm"
-                required
-              />
+          <form action="/todos" method="post" onsubmit="return validateTodoForm()">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <div class="flex gap-2 mt-5">
+              <div class="flex-auto">
+                <input type="text" name="title" placeholder="Task Title"
+                  class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm" required />
+              </div>
+              <div class="flex-auto">
+                <input type="date" name="dueDate" id="dueDateInput"
+                  class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm leading-4" required />
+              </div>
+              <div class="flex-none">
+                <button type="submit" class="bg-green-700 text-white px-5 py-1.5 rounded-xl font-medium mr-2 mb-2">
+                  Add
+                </button>
+              </div>
             </div>
-            <div class="flex-auto">
-              <input
-                type="date"
-                name="dueDate"
-                id="dueDateInput"
-                class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm leading-4"
-                required
-              />
-            </div>
-            <div class="flex-none">
-              <button
-                type="submit"
-                class="bg-green-700 text-white px-5 py-1.5 rounded-xl font-medium mr-2 mb-2"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </form>        
-        <%- include('todos.ejs') %> <%- include("footer.ejs") %>
+          </form>
+          <%- include('todos.ejs') %> <%- include("footer.ejs") %>
       </div>
     </div>
-    
   </body>
 </html>
