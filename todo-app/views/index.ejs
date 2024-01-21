@@ -8,14 +8,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css" />
     <script>
+      function validateTodoForm() {
+        const title = document.getElementsByName("title")[0].value;
+        const dueDate = document.getElementById("dueDateInput").value;
+
+        if (title.trim() === "" || dueDate.trim() === "") {
+          alert("Title and Due Date cannot be empty.");
+          return false;
+        }
+
+        return true;
+      }
+
       var token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
+
       function updateTodo(id) {
         const bool = document.querySelector(`#todo-checkbox-${id}`).checked;
         var token = document
           .querySelector('meta[name="csrf-token"]')
           .getAttribute("content");
+
         fetch(`/todos/${id}`, {
           method: "put",
           headers: { "Content-Type": "application/json" },
@@ -31,6 +45,7 @@
           })
           .catch((err) => console.error(err));
       }
+
       function deleteTodo(id) {
         console.log(id);
         fetch(`/todos/${id}`, {
@@ -54,13 +69,13 @@
     <div class="grid pt-28 grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include("header.ejs") %>
-        <form action="/todos" method="post">
+        <form action="/todos" method="post" onsubmit="return validateTodoForm()">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <div class="flex gap-2 mt-5">
             <div class="flex-auto">
               <input
                 type="text"
-                name="title" 
+                name="title"
                 placeholder="Task Title"
                 class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm"
                 required
@@ -69,8 +84,10 @@
             <div class="flex-auto">
               <input
                 type="date"
-                name="dueDate" 
+                name="dueDate"
+                id="dueDateInput"
                 class="border border-gray-500 rounded-xl text-gray-900 w-full p-2 text-sm leading-4"
+                required
               />
             </div>
             <div class="flex-none">
@@ -87,6 +104,5 @@
       </div>
     </div>
     
-
   </body>
 </html>
