@@ -41,15 +41,27 @@ app.get("/todos", async function (_request, response) {
 
 app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
+
   try {
     const newCompletionStatus = !todo.completed;
+
+    // Check if the todo is overdue
+    const dueDate = new Date(todo.dueDate);
+    const currentDate = new Date();
+
+    if (newCompletionStatus && dueDate < currentDate) {
+      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
+    }
+
     await todo.update({ completed: newCompletionStatus });
+
     return response.json(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
+
 
 app.post("/todos", async function (request, response) {
   try {
@@ -67,7 +79,12 @@ app.post("/todos", async function (request, response) {
 
 app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
+
   try {
+    if (!todo) {
+      return response.status(404).json({ error: "Todo not found" });
+    }
+
     const newCompletionStatus = !todo.completed;
 
     // Check if the todo is overdue

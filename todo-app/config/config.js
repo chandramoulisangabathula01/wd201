@@ -17,9 +17,9 @@ module.exports = {
     logging: false,
   },
   production: {
-   "use_env_variable": "DATABASE_URL",
-   "dialect":"prostgres"
-  }
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres',
+  },
 };
 
 
