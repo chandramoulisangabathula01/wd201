@@ -1,11 +1,13 @@
 const request = require("supertest");
-const app = require("../app");
 const db = require("../models/index");
+const app = require("../app");
 const cheerio = require("cheerio");
+const { Todo } = require("../models");
+
 
 let server, agent;
 
-function extractCsrfToken(res) {
+function extractToken(res) {
   let $ = cheerio.load(res.text);
   return $("[name=_csrf]").val();
 }
@@ -51,7 +53,7 @@ describe("Todo Application", function () {
     const csrfToken = extractCsrfToken(res);
     const todoID = 1;
     const response = await agent
-      .put(`/todos/${todoID}`)
+      .put(`/todos/${overdueItem.id}`)
       .set("Accept", "application/json")
       .send({ _csrf: csrfToken })
       .expect(200);
@@ -64,6 +66,8 @@ describe("Todo Application", function () {
     const res = await agent.get("/");
     const csrfToken = extractCsrfToken(res);
     const todoID = 1;
+
+    // Toggle the completed item to incomplete
     const response = await agent
       .put(`/todos/${todoID}`)
       .set("Accept", "application/json")
@@ -83,6 +87,4 @@ describe("Todo Application", function () {
       .send({ _csrf: csrfToken })
       .expect(200, { success: true });
   });
-
-  // ... Rest of the tests
 });
