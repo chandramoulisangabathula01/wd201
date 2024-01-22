@@ -26,6 +26,8 @@ app.get("/", async (request, response) => {
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get('/favicon.ico', (req, res) => res.status(204));
+
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
   try {
@@ -37,46 +39,17 @@ app.get("/todos", async function (_request, response) {
   }
 });
 
-// app.put("/todos/:id", async function (request, response) {
-//   const todo = await Todo.findByPk(request.params.id);
-//   try {
-//     const newCompletionStatus = !todo.completed;
-//     await todo.update({ completed: newCompletionStatus });
-//     return response.json(todo);
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error);
-//   }
-// });
-
 app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
-
   try {
     const newCompletionStatus = !todo.completed;
-
-    // Check if the todo is overdue
-    const dueDate = new Date(todo.dueDate);
-    const currentDate = new Date();
-
-    console.log("Due Date:", dueDate);
-    console.log("Current Date:", currentDate);
-
-    if (newCompletionStatus && dueDate < currentDate) {
-      console.log("Overdue item marked as completed!");
-      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
-    }
-
     await todo.update({ completed: newCompletionStatus });
-
     return response.json(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
-
-
 
 app.post("/todos", async function (request, response) {
   try {
@@ -92,21 +65,42 @@ app.post("/todos", async function (request, response) {
   }
 });
 
-// app.put("/todos/:id", async function (request, response) {
-//   const todo = await Todo.findByPk(request.params.id);
-//   try {
-//     await todo.setCompletionStatus(todo.completed);
-//     return response.json(todo);
-//   } catch (error) {
-//     console.log(error);a
-//     return response.status(422).json(error);
-//   }
-// });
+app.put("/todos/:id", async function (request, response) {
+  const todo = await Todo.findByPk(request.params.id);
+  try {
+    const newCompletionStatus = !todo.completed;
+
+    // Check if the todo is overdue
+    const dueDate = new Date(todo.dueDate);
+    const currentDate = new Date();
+
+    if (newCompletionStatus && dueDate < currentDate) {
+      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
+    }
+
+    await todo.update({ completed: newCompletionStatus });
+
+    return response.json(todo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+
+
+
 
 app.delete("/todos/:id", async function (request, response) {
   console.log("Deleting a Todo with ID: ", request.params.id);
   try {
-    await Todo.remove(request.params.id);
+    const todo = await Todo.findByPk(request.params.id);
+    
+    if (!todo) {
+      return response.status(404).json({ error: "Todo not found" });
+    }
+
+    await todo.destroy();
+    
     return response.json({ success: true });
   } catch (error) {
     console.log(error);
