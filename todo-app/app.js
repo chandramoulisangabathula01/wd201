@@ -1,70 +1,50 @@
 const express = require("express");
 const app = express();
-var csrf = require("csurf");
-var cookieParser = require("cookie-parser");
-const { Todo } = require("./models");
 const bodyParser = require("body-parser");
-app.use(bodyParser.json());
 const path = require("path");
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser("ssh! some secret string"));
-app.use(csrf({ cookie: true }));
-app.set("view engine", "ejs");
-// app.set("views", path.join(__dirname, "views"));
-// app.use(express.static(path.join(__dirname, "public")));
-app.get("/", async (request, response) => {
-  const allTodos = await Todo.allTodos();
-  if (request.accepts("html")) {
-    response.render("index", {
-      allTodos,
-      csrfToken: request.csrfToken(),
-    });
-  } else {
-    response.json(allTodos);
-  }
-});
+const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
 
+const { Todo } = require("./models");
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser("your-secret-string"));  // Add cookie-parser middleware
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get('/favicon.ico', (req, res) => res.status(204));
+// Update csrf middleware configuration
+app.use(csrf({ cookie: true }));  // Set httpOnly to false for client-side access
 
-app.get("/todos", async function (_request, response) {
-  console.log("Processing list of all Todos ...");
+// Routes
+app.get("/", async (request, response) => {
   try {
-    const todo = await Todo.findAll();
-    return response.json(todo);
+    const allTodos = await Todo.allTodos();
+    if (request.accepts("html")) {
+      response.render("index", {
+        allTodos,
+        csrfToken: request.csrfToken(),
+      });
+    } else {
+      response.json(allTodos);
+    }
   } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.put("/todos/:id", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
 
+app.post("/todos", async (request, response) => {
   try {
-    const newCompletionStatus = !todo.completed;
-
-    // Check if the todo is overdue
-    const dueDate = new Date(todo.dueDate);
-    const currentDate = new Date();
-
-    if (newCompletionStatus && dueDate < currentDate) {
-      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
+    // Validate input
+    if (!request.body.title || !request.body.dueDate) {
+      return response.status(422).json({ error: "Title and dueDate are required" });
     }
 
-    await todo.update({ completed: newCompletionStatus });
-
-    return response.json(todo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-
-
-app.post("/todos", async function (request, response) {
-  try {
     const todo = await Todo.addTodo(request.body);
     if (request.accepts("html")) {
       return response.redirect("/");
@@ -72,56 +52,42 @@ app.post("/todos", async function (request, response) {
       return response.json(todo);
     }
   } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.put("/todos/:id", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
-
+app.put("/todos/:id", async (request, response) => {
   try {
+    const todo = await Todo.findByPk(request.params.id);
+
     if (!todo) {
       return response.status(404).json({ error: "Todo not found" });
     }
 
     const newCompletionStatus = !todo.completed;
-
-    // Check if the todo is overdue
-    const dueDate = new Date(todo.dueDate);
-    const currentDate = new Date();
-
-    if (newCompletionStatus && dueDate < currentDate) {
-      return response.status(422).json({ error: "Cannot mark overdue item as completed" });
-    }
-
     await todo.update({ completed: newCompletionStatus });
 
     return response.json(todo);
   } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-
-
-
-app.delete("/todos/:id", async function (request, response) {
-  console.log("Deleting a Todo with ID: ", request.params.id);
+app.delete("/todos/:id", async (request, response) => {
   try {
     const todo = await Todo.findByPk(request.params.id);
-    
+
     if (!todo) {
       return response.status(404).json({ error: "Todo not found" });
     }
 
     await todo.destroy();
-    
     return response.json({ success: true });
   } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   }
 });
 
