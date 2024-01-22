@@ -8,6 +8,7 @@
   <title>TO-DO Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/styles.css" />
+  <meta name="csrf-token" content="<%= csrfToken %>">
   <script>
     var token = document
       .querySelector('meta[name="csrf-token"]')

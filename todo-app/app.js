@@ -59,7 +59,11 @@ app.put("/todos/:id", async function (request, response) {
     const dueDate = new Date(todo.dueDate);
     const currentDate = new Date();
 
+    console.log("Due Date:", dueDate);
+    console.log("Current Date:", currentDate);
+
     if (newCompletionStatus && dueDate < currentDate) {
+      console.log("Overdue item marked as completed!");
       return response.status(422).json({ error: "Cannot mark overdue item as completed" });
     }
 
@@ -71,6 +75,7 @@ app.put("/todos/:id", async function (request, response) {
     return response.status(422).json(error);
   }
 });
+
 
 
 app.post("/todos", async function (request, response) {

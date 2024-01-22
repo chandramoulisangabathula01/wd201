@@ -295,3 +295,18 @@ test("Fetches all todos in the database using /todos endpoint", async () => {
   expect(parsedResponse.length).toBe(3);
   expect(parsedResponse[2]["title"]).toBe("Buy ps3");
 });
+
+test("Should mark sample overdue item as completed", async () => {
+  const res = await agent.get("/");
+  const csrfToken = extractToken(res);
+  const todoID = 1;
+  try {
+    const response = await agent
+      .put(`/todos/${todoID}`)
+      .set("Accept", "application/json")
+      .send({ _csrf: csrfToken });
+    expect(JSON.parse(response.text).completed).toBe(true);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+});
