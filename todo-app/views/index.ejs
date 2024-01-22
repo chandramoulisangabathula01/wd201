@@ -12,92 +12,112 @@
 <body>
   <div class="grid grid-cols-6">
     <div class="col-start-3 col-span-2">
+      <!-- Include the header -->
       <%- include("header.ejs") %>
-        <form action="/todos" method="">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <div class="flex gap-2 py-4">
-            <div class="flex-auto">
-              <input type="text" placeholder="What's next?" name="title"
-                class="border border-black text-gray-900 w-full rounded p-2 text-sm leading-4" required />
-            </div>
-            <div class="flex-auto">
-              <input type="date" class="text-black w-full border border-black rounded p-2 text-sm leading-4" name="dueDate" 
-              />
-              
-            </div>
-            <div class="flex-none">
-              <button type="submit" class="bg-green-600 text-white p-2 rounded  text-sm leading-4 border border-green-500 ">
-                Add
-              </button>
-            </div>
+
+      <!-- Todo Form -->
+      <form action="/todos" method="">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="flex gap-2 py-4">
+          <div class="flex-auto">
+            <input type="text" placeholder="What's next?" name="title"
+              class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm leading-4" required />
           </div>
-        </form>
-        <%-include("todos.ejs") %>
+          <div class="flex-auto">
+            <input type="date" class="text-black" name="dueDate" />
+          </div>
+          <div class="flex-none">
+            <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">
+              Add
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Todo Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Include the todos with a table row for each todo -->
+          <%- include("todos.ejs") %>
+        </tbody>
+      </table>
+
     </div>
   </div>
-</body>
-<script>
-  const form = document.querySelector("form");
-  form.onsubmit = async function (e) {
-    e.preventDefault();
 
-    const formData = new FormData(form);
-    const formObject = {};
-    formData.forEach((value, key) => {
-      formObject[key] = value;
-    });
+  <!-- JavaScript Section -->
+  <script>
+    const form = document.querySelector("form");
+    form.onsubmit = async function (e) {
+      e.preventDefault();
 
-    if (formObject.title !== "") {
-      const res = await fetch("/todos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "CSRF-Token": "<%= csrfToken %>",
-        },
-        body: JSON.stringify(formObject),
+      // Collect form data
+      const formData = new FormData(form);
+      const formObject = {};
+      formData.forEach((value, key) => {
+        formObject[key] = value;
       });
+
+      // Send the form data as JSON
+      if (formObject.title !== "") {
+        const res = await fetch("/todos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "CSRF-Token": "<%= csrfToken %>",
+          },
+          body: JSON.stringify(formObject),
+        });
+        if (res.ok) {
+          // Handle success, e.g., redirect or update UI
+          console.log("Todo added successfully");
+          window.location.reload();
+        } else {
+          // Handle error response
+          const data = await res.json();
+          console.error("Error adding todo:", data);
+        }
+      }
+    };
+
+    async function setTodoStatus(id) {
+      const checkbox = document.querySelector(`#todo-checkbox-${id}`);
+      console.log(id, checkbox);
+      console.log(checkbox.checked);
+      const res = await fetch(`/todos/${id}/`, {
+        method: "put",
+        headers: { "Content-Type": "application/json", "CSRF-Token": "<%= csrfToken %>", },
+        body: JSON.stringify({ completed: checkbox.checked, })
+      })
       if (res.ok) {
-        console.log("Todo added successfully");
         window.location.reload();
-      } else {
-        
-        const data = await res.json();
-        console.error("Error adding todo:", data);
       }
     }
-  };
 
-  async function setTodoStatus(id) {
-    const checkbox = document.querySelector(`#todo-checkbox-${id}`);
-    console.log(id, checkbox);
-    console.log(checkbox.checked);
-    const res = await fetch(`/todos/${id}/`, {
-      method: "put",
-      headers: { "Content-Type": "application/json", "CSRF-Token": "<%= csrfToken %>", },
-      body: JSON.stringify({ completed: checkbox.checked, })
-    })
-    if (res.ok) {
-      window.location.reload();
+    function deleteTodo(id) {
+      console.log("Deleting Todo", id);
+      fetch(`/todos/${id}`, {
+        method: "delete",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "_csrf": "<%= csrfToken %>",
+        })
+      })
+        .then((res) => {
+          if (res.ok) {
+            window.location.reload();
+          }
+        })
+        .catch((err) => console.log(err))
     }
-  }
-  function deleteTodo(event, id) {
-    // event.preventDefault();
-    // event.stopPropagation();
-    console.log("Deleting Todo", id)
-    fetch(`/todos/${id}`, {
-      method: "delete",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        "_csrf": "<%= csrfToken %>",
-      })
-    })
-      .then((res) => {
-        if (res.ok) {
-          window.location.reload();
-        }
-      })
-      .catch((err) => console.log(err))
-  }
-</script>
+  </script>
+</body>
 
 </html>
