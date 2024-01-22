@@ -247,8 +247,10 @@ describe("Todo Application", function () {
       .put(`/todos/${todoID}`)
       .set("Accept", "application/json")
       .send({ _csrf: csrfToken });
+  
     expect(JSON.parse(response.text).completed).toBe(true);
   });
+  
 
   test("Marks a todo with the given ID as incomplete", async () => {
     const res = await agent.get("/");

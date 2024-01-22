@@ -3,7 +3,10 @@
     background-color: aqua;
     font-family: 'Courier New', Courier, monospace;
 }
-.Todo-item:hover .trash-icon {
+.Todo-item:hover {
     display:block ;
 
 }
+.trash-icon {
+    display: block;
+  }
