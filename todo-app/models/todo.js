@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Todo.belongsTo(models.User,{
         foreignKey:'userId'
       });
-      // define association here
+      // define association 
     }
 
     static addTodo({ title, dueDate ,userId}) {
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-    
+
     static async dueLaterTodos(userId) {
       const date = new Date();
       return this.findAll({
