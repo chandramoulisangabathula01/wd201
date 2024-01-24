@@ -97,25 +97,9 @@ describe("Todo Application", function () {
     expect(parseAboveResponse.completed).toBe(true);
   });
 
-  // test("Fetches all todos in the database using /todos endpoint", async () => {
-  //   const response = await agent
-  //     .get("/todos")
-  //     .set("Accept", "application/json");
-  //   const todos = JSON.parse(response.text);
-
-  //   expect(response.statusCode).toBe(200);
-  //   expect(Array.isArray(todos)).toBe(true);
-  //   if (todos.length > 0) {
-      
-  //     expect(todos[0]).toHaveProperty("id");
-  //     expect(todos[0]).toHaveProperty("title");
-  //   } else {
-  //     console.warn("Noo TODOS found ");
-  //   }
-  // });
-
+  
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    // Create a todo to be deleted
+   
     const res = await agent.get("/");
     const csrfToken = extractCSRFToken(res);
     console.log(csrfToken);
@@ -131,7 +115,7 @@ describe("Todo Application", function () {
     expect(createResponse.ok).toBe(true);
 
     const createResponseParsed = JSON.parse(createResponse.text);
-    
+
     const deleteReq = await agent
       .delete(`/todos/${createResponseParsed.id}`)
       .send({ _csrf: csrfToken });
