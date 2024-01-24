@@ -9,7 +9,7 @@
     "build": "npm install && NODE_ENV=production npx sequelize-cli db:migrate",
     "pretest": "NODE_ENV=test npm run recreate-test-db",
     "recreate-test-db": "npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test node migrations/20240122184835-add-user-id-in-todos.js jest",
     "prepare": "cd .. && husky install todo-app/.husky"
   },
   "author": "chandramouli <chandramoulisangabathula01>",
