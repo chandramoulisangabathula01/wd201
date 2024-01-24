@@ -1,6 +1,6 @@
 *{
-    color: rgb(203, 50, 73);
-    background-color: aqua;
+    color: #000000;
+    background-color: #F9EA85;
     font-family: 'Courier New', Courier, monospace;
 }
 .Todo-item:hover {
@@ -10,3 +10,6 @@
 .trash-icon {
     display: block;
   }
+.colorred{
+    color:#9e2929;
+}

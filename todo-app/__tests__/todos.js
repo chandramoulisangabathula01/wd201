@@ -12,7 +12,7 @@ function extractCSRFToken(res) {
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => {});
+    server = app.listen(3000, () => {});
     agent = request.agent(server);
   });
 
@@ -72,17 +72,12 @@ describe("Todo Application", function () {
 
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(todos)).toBe(true);
-
-    // Add a condition to check the length of the array
     if (todos.length > 0) {
-      // Add additional assertions based on your application logic
-      // For example, you might want to check the structure of each todo in the array
+      
       expect(todos[0]).toHaveProperty("id");
       expect(todos[0]).toHaveProperty("title");
-      // Add more assertions as needed
     } else {
-      // Handle the case where there are no todos (adjust as per your application logic)
-      console.warn("No todos found in the response.");
+      console.warn("Noo TODOS found ");
     }
   });
 
@@ -94,7 +89,7 @@ describe("Todo Application", function () {
     const createResponse = await agent
       .post("/todos")
       .send({
-        title: "To be deleted",
+        title: "To deleted a ToDo",
         dueDate: new Date().toISOString(),
         completed: false,
         _csrf: csrfToken,
