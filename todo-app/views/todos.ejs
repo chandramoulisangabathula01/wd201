@@ -7,44 +7,7 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>To-Do Manager</title>
-    <script>
-        var token = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
-
-        function updateTodo(id,status){
-            fetch(`/todos/${id}`,{
-                method:"put",
-                headers:{"Content-Type":"application/json"},
-                body: JSON.stringify({
-                    completed:status,
-                    "_csrf":token
-                })
-            })
-            .then((res) => {
-                if (res.ok) {
-                    window.location.reload();
-                }
-            })
-            .catch((err) => console.error(err));
-        }
-
-        function deleteTodo(id){
-            fetch(`/todos/${id}`,{
-                method:"delete",
-                headers:{"Content-Type":"application/json"},
-                body: JSON.stringify({
-                    "_csrf":token
-                })
-            })
-            .then((res) => {
-                if (res.ok){
-                    window.location.reload();
-                }
-            })
-            .catch((err)=>console.error(err));
-        }
-    </script>
+    
 </head>
 <body>
     <div class="grid grid-cols-6">
@@ -55,10 +18,10 @@
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <div class="flex gap-2 py-4">
                     <div class="flex-auto">
-                        <input type="text" name="title" placeholder="what's next?" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm" required/>
+                        <input type="text" name="title" placeholder="what's next?" class="border border-gray-400 text-gray-900 w-full rounded p-2 text-sm" required/>
                     </div>
                     <div class="flex-auto">
-                        <input type="date" name="dueDate" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm leading-4" required>
+                        <input type="date" name="dueDate" class="border border-gray-400 text-gray-900 w-full rounded p-2 text-sm " required>
                     </div>
                     <div class="flex-none">
                         <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">submit</button>
@@ -85,4 +48,42 @@
     </div> 
     </div>
 </body>
+<script>
+  var token = document
+  .querySelector('meta[name="csrf-token"]')
+  .getAttribute("content");
+
+  function updateTodo(id,status){
+      fetch(`/todos/${id}`,{
+          method:"put",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+              completed:status,
+              "_csrf":token
+          })
+      })
+      .then((res) => {
+          if (res.ok) {
+              window.location.reload();
+          }
+      })
+      .catch((err) => console.error(err));
+  }
+
+  function deleteTodo(id){
+      fetch(`/todos/${id}`,{
+          method:"delete",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+              "_csrf":token
+          })
+      })
+      .then((res) => {
+          if (res.ok){
+              window.location.reload();
+          }
+      })
+      .catch((err)=>console.error(err));
+  }
+</script>
 </html>

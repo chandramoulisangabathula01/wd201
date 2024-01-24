@@ -30,6 +30,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 
+// session
+
 app.use(session({
   secret: "my-super-secret-key-875984664558545848",
   cookie:{
@@ -38,6 +40,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }));
+
+
+// passport
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -80,6 +86,10 @@ passport.deserializeUser((id,done)=>{
   })
 });
 
+
+// home route
+
+
 app.get("/", async (request, response) => {
   if (request.isAuthenticated()) {
     return response.redirect("/todos");
@@ -88,6 +98,10 @@ app.get("/", async (request, response) => {
     csrfToken: request.csrfToken(),
   });
 });
+
+
+// todos route
+
 
 app.get("/todos", connectEnsureLogin.ensureLoggedIn(),async (request, response) => {
   const loggedInUser = request.user.id;
@@ -113,6 +127,10 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(),async (request, response) 
     });
   }
 });
+
+
+// signup route
+
 
 app.get("/signup",(request,response)=>{
   if (request.isAuthenticated()) {
@@ -155,12 +173,17 @@ app.post("/users",async (request,response)=>{
   }
 })
 
+
+// login block
+
+
 app.get("/login",(request,response)=>{
   if (request.isAuthenticated()) {
     return response.redirect("/todos");
   }
   response.render("login",{title:"Login",csrfToken:request.csrfToken()});
 });
+
 
 app.post(
   "/session",
@@ -173,6 +196,10 @@ app.post(
     response.redirect("/todos");
   }
 );
+
+
+// logout/signout
+
 
 app.get("/signout",(request,response, next)=>{
   request.logout((err)=>{
@@ -207,6 +234,10 @@ app.get("/todos/:id", async function (request, response) {
   }
 });
 
+
+// creating of a Todo
+
+
 app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("Creating a todo",request.body);
   console.log(request.user);
@@ -224,7 +255,7 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
       dueDate:request.body.dueDate,
       userId:request.user.id
     });
-    //return response.json(todo);
+    
     return response.redirect("/todos");
   } catch (error) {
     console.log(error);
@@ -242,6 +273,9 @@ app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (reques
     return response.status(422).json(error);
   }
 });
+
+
+// To delete a todo
 
 app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
   console.log("Deleting a Todo with ID: ",request.params.id);
