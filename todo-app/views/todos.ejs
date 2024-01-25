@@ -13,7 +13,7 @@
     <div class="grid grid-cols-6">
         <div class="col-start-3 col-span-2">
             <%- include('header.ejs') %>
-            <a href="/signout">Signout</a>
+            
             <form action="/todos" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <div class="flex gap-2 py-4">
@@ -24,7 +24,7 @@
                         <input type="date" name="dueDate" class="border border-gray-400 text-gray-900 w-full rounded p-2 text-sm " required>
                     </div>
                     <div class="flex-none">
-                        <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">submit</button>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 px-5 py-1.5 rounded font-medium mr-2 mb-2">submit</button>
                     </div>
                 </div>
             </form>
@@ -45,6 +45,7 @@
     <div class="grid grid-cols-6 gap-2 py-4">
       <div class="col-start-3 col-span-2">
         <%- include('footer.ejs') %>
+        <a href="/signout" class="bg-red-600 hover:bg-red-800 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2" >Signout</a>
     </div> 
     </div>
 </body>

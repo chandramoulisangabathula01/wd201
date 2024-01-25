@@ -31,7 +31,7 @@ describe("Todo Application", function () {
   beforeAll(async () => {
     // Sync the database and start the server
     await db.sequelize.sync({ force: true });
-    server = app.listen(3000, () => {});
+    server = app.listen(4000, () => {});
     agent = request.agent(server);
   });
 
