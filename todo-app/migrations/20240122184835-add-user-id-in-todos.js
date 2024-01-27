@@ -23,7 +23,7 @@ module.exports = {
           type: 'foreign key',
           references: {
             table: 'Users',
-            field: 'userId',
+            field: 'id',
           },
         });
       }
@@ -37,12 +37,6 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.renameColumn('Todos','userId')
-    // await queryInterface.removeConstraint('Todos', 'Todos_userId_fkey');
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    
   }
 };
